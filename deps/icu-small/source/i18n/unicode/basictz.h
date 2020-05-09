@@ -10,7 +10,7 @@
 #define BASICTZ_H
 
 /**
- * \file
+ * \file 
  * \brief C++ API: ICU TimeZone base class
  */
 
@@ -205,6 +205,12 @@ protected:
      * @stable ICU 3.8
      */
     BasicTimeZone(const BasicTimeZone& source);
+
+    /**
+     * Copy assignment.
+     * @stable ICU 3.8
+     */
+    BasicTimeZone& operator=(const BasicTimeZone&) = default;
 
     /**
      * Gets the set of TimeZoneRule instances applicable to the specified time and after.

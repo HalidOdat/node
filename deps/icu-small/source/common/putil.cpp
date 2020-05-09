@@ -886,7 +886,7 @@ typedef struct DefaultTZInfo {
  * It is currently use to compare two TZ files.
  */
 static UBool compareBinaryFiles(const char* defaultTZFileName, const char* TZFileName, DefaultTZInfo* tzInfo) {
-    FILE* file;
+    FILE* file; 
     int64_t sizeFile;
     int64_t sizeFileLeft;
     int32_t sizeFileRead;
@@ -1091,10 +1091,10 @@ uprv_tzname(int n)
         && uprv_strcmp(tzid, TZ_ENV_CHECK) != 0
 #endif
     ) {
-        /* The colon forces tzset() to treat the remainder as zoneinfo path */
-        if (tzid[0] == ':') {
-            tzid++;
-        }
+        /* The colon forces tzset() to treat the remainder as zoneinfo path */ 
+        if (tzid[0] == ':') { 
+            tzid++; 
+        } 
         /* This might be a good Olson ID. */
         skipZoneIDPrefix(&tzid);
         return tzid;
@@ -1115,7 +1115,7 @@ uprv_tzname(int n)
             int32_t tzZoneInfoTailLen = uprv_strlen(TZZONEINFOTAIL);
             gTimeZoneBuffer[ret] = 0;
             char *  tzZoneInfoTailPtr = uprv_strstr(gTimeZoneBuffer, TZZONEINFOTAIL);
-
+            
             if (tzZoneInfoTailPtr != NULL
                 && isValidOlsonID(tzZoneInfoTailPtr + tzZoneInfoTailLen))
             {
@@ -1445,7 +1445,7 @@ static void setTimeZoneFilesDir(const char *path, UErrorCode &status) {
 #endif
 }
 
-#define TO_STRING(x) TO_STRING_2(x)
+#define TO_STRING(x) TO_STRING_2(x) 
 #define TO_STRING_2(x) #x
 
 static void U_CALLCONV TimeZoneDataDirInitFn(UErrorCode &status) {
@@ -1458,6 +1458,11 @@ static void U_CALLCONV TimeZoneDataDirInitFn(UErrorCode &status) {
     }
 
     const char *dir = "";
+
+#if defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
+    char timezonefilesdir_path_buffer[PATH_MAX];
+    const char *prefix = getenv(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR);
+#endif
 
 #if U_PLATFORM_HAS_WINUWP_API == 1
 // The UWP version does not support the environment variable setting.
@@ -1484,6 +1489,13 @@ static void U_CALLCONV TimeZoneDataDirInitFn(UErrorCode &status) {
     if (dir == NULL) {
         dir = "";
     }
+
+#if defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
+    if (prefix != NULL) {
+        snprintf(timezonefilesdir_path_buffer, PATH_MAX, "%s%s", prefix, dir);
+        dir = timezonefilesdir_path_buffer;
+    }
+#endif
 
     setTimeZoneFilesDir(dir, status);
 }
@@ -1540,7 +1552,7 @@ static const char *uprv_getPOSIXIDForCategory(int category)
         {
             /* Maybe we got some garbage.  Try something more reasonable */
             posixID = getenv("LC_ALL");
-            /* Solaris speaks POSIX -  See IEEE Std 1003.1-2008
+            /* Solaris speaks POSIX -  See IEEE Std 1003.1-2008 
              * This is needed to properly handle empty env. variables
              */
 #if U_PLATFORM == U_PF_SOLARIS
@@ -1551,7 +1563,7 @@ static const char *uprv_getPOSIXIDForCategory(int category)
             if (posixID == 0) {
                 posixID = getenv(category == LC_MESSAGES ? "LC_MESSAGES" : "LC_CTYPE");
                 if (posixID == 0) {
-#endif
+#endif                    
                     posixID = getenv("LANG");
                 }
             }
@@ -1659,7 +1671,7 @@ The leftmost codepage (.xxx) wins.
       // (The "C"/"POSIX" case is handled in uprv_getPOSIXIDForCategory())
       uprv_strcpy(correctedPOSIXLocale, "en_US_POSIX");
     }
-
+ 
     /* Note that we scan the *uncorrected* ID. */
     const char *p;
     if ((p = uprv_strrchr(posixID, '@')) != nullptr) {
@@ -2080,7 +2092,7 @@ int_getDefaultCodepage()
 #endif
     // Special case for UTF-8
     if (codepageNumber == 65001)
-    {
+    { 
         return "UTF-8";
     }
     // Windows codepages can look like windows-1252, so format the found number
@@ -2273,7 +2285,7 @@ u_getVersion(UVersionInfo versionArray) {
 }
 
 /**
- * icucfg.h dependent code
+ * icucfg.h dependent code 
  */
 
 #if U_ENABLE_DYLOAD && HAVE_DLOPEN && !U_PLATFORM_USES_ONLY_WIN32_API
@@ -2333,15 +2345,15 @@ uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
 U_INTERNAL void * U_EXPORT2
 uprv_dl_open(const char *libName, UErrorCode *status) {
   HMODULE lib = NULL;
-
+  
   if(U_FAILURE(*status)) return NULL;
-
+  
   lib = LoadLibraryA(libName);
-
+  
   if(lib==NULL) {
     *status = U_MISSING_RESOURCE_ERROR;
   }
-
+  
   return (void*)lib;
 }
 
@@ -2349,9 +2361,9 @@ U_INTERNAL void U_EXPORT2
 uprv_dl_close(void *lib, UErrorCode *status) {
   HMODULE handle = (HMODULE)lib;
   if(U_FAILURE(*status)) return;
-
+  
   FreeLibrary(handle);
-
+  
   return;
 }
 
@@ -2359,11 +2371,11 @@ U_INTERNAL UVoidFunction* U_EXPORT2
 uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
   HMODULE handle = (HMODULE)lib;
   UVoidFunction* addr = NULL;
-
+  
   if(U_FAILURE(*status) || lib==NULL) return NULL;
-
+  
   addr = (UVoidFunction*)GetProcAddress(handle, sym);
-
+  
   if(addr==NULL) {
     DWORD lastError = GetLastError();
     if(lastError == ERROR_PROC_NOT_FOUND) {
@@ -2372,7 +2384,7 @@ uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
       *status = U_UNSUPPORTED_ERROR; /* other unknown error. */
     }
   }
-
+  
   return addr;
 }
 

@@ -93,7 +93,7 @@ public:
     /**
      * Computes the spans for duplicated values.
      * For example, if the string has fields:
-     *
+     * 
      *     ...aa..[b.cc]..d.[bb.e.c]..a..
      *
      * then the spans will be the bracketed regions.
@@ -153,7 +153,6 @@ private:
 
     bool nextPositionImpl(ConstrainedFieldPosition& cfpos, FormattedStringBuilder::Field numericField, UErrorCode& status) const;
     static bool isIntOrGroup(FormattedStringBuilder::Field field);
-    static bool isNumericField(FormattedStringBuilder::Field field);
     int32_t trimBack(int32_t limit) const;
     int32_t trimFront(int32_t start) const;
 };

@@ -215,6 +215,12 @@ enum PluralOperand {
     PLURAL_OPERAND_W,
 
     /**
+     * Suppressed exponent for compact notation (exponent needed in
+     * scientific notation with compact notation to approximate i).
+     */
+    PLURAL_OPERAND_E,
+
+    /**
      * THIS OPERAND IS DEPRECATED AND HAS BEEN REMOVED FROM THE SPEC.
      *
      * <p>Returns the integer value, but will fail if the number has fraction digits.
@@ -319,7 +325,7 @@ public:
     tokenType digitsType = none;    // n | i | v | f constraint.
     AndConstraint *next = nullptr;
     // Internal error status, used for errors that occur during the copy constructor.
-    UErrorCode fInternalStatus = U_ZERO_ERROR;
+    UErrorCode fInternalStatus = U_ZERO_ERROR;    
 
     AndConstraint() = default;
     AndConstraint(const AndConstraint& other);

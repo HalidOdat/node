@@ -71,6 +71,40 @@ public:
    */
   virtual void Append(const char* bytes, int32_t n) = 0;
 
+#ifndef U_HIDE_DRAFT_API
+  /**
+   * Appends n bytes to this. Same as Append().
+   * Call AppendU8() with u8"string literals" which are const char * in C++11
+   * but const char8_t * in C++20.
+   * If the compiler does support char8_t as a distinct type,
+   * then an AppendU8() overload for that is defined and will be chosen.
+   *
+   * @param bytes the pointer to the bytes
+   * @param n the number of bytes; must be non-negative
+   * @draft ICU 67
+   */
+  inline void AppendU8(const char* bytes, int32_t n) {
+    Append(bytes, n);
+  }
+
+#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+  /**
+   * Appends n bytes to this. Same as Append() but for a const char8_t * pointer.
+   * Call AppendU8() with u8"string literals" which are const char * in C++11
+   * but const char8_t * in C++20.
+   * If the compiler does support char8_t as a distinct type,
+   * then this AppendU8() overload for that is defined and will be chosen.
+   *
+   * @param bytes the pointer to the bytes
+   * @param n the number of bytes; must be non-negative
+   * @draft ICU 67
+   */
+  inline void AppendU8(const char8_t* bytes, int32_t n) {
+    Append(reinterpret_cast<const char*>(bytes), n);
+  }
+#endif
+#endif  // U_HIDE_DRAFT_API
+
   /**
    * Returns a writable buffer for appending and writes the buffer's capacity to
    * *result_capacity. Guarantees *result_capacity>=min_capacity.
@@ -136,7 +170,7 @@ private:
 // -------------------------------------------------------------
 // Some standard implementations
 
-/**
+/** 
  * Implementation of ByteSink that writes to a flat byte array,
  * with bounds-checking:
  * This sink will not write more than capacity bytes to outbuf.
@@ -226,7 +260,7 @@ private:
   CheckedArrayByteSink &operator=(const CheckedArrayByteSink &) = delete;
 };
 
-/**
+/** 
  * Implementation of ByteSink that writes to a "string".
  * The StringClass is usually instantiated with a std::string.
  * @stable ICU 4.2
@@ -242,7 +276,7 @@ class StringByteSink : public ByteSink {
   StringByteSink(StringClass* dest) : dest_(dest) { }
   /**
    * Constructs a ByteSink that reserves append capacity and will append bytes to the dest string.
-   *
+   * 
    * @param dest pointer to string object to append to
    * @param initialAppendCapacity capacity beyond dest->length() to be reserve()d
    * @stable ICU 60

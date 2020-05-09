@@ -79,7 +79,7 @@ class StringEnumeration;
  *    #include "unicode/unistr.h"
  *    #include "unicode/ustream.h"
  *    using namespace std;
- *
+ *    
  *    int main() {
  *        double myNumber = 7.0;
  *        UnicodeString myString;
@@ -239,12 +239,10 @@ public:
         kPermillField = UNUM_PERMILL_FIELD,
         /** @stable ICU 2.0 */
         kSignField = UNUM_SIGN_FIELD,
-#ifndef U_HIDE_DRAFT_API
-        /** @draft ICU 64 */
+        /** @stable ICU 64 */
         kMeasureUnitField = UNUM_MEASURE_UNIT_FIELD,
-        /** @draft ICU 64 */
+        /** @stable ICU 64 */
         kCompactField = UNUM_COMPACT_FIELD,
-#endif  // U_HIDE_DRAFT_API
 
     /**
      * These constants are provided for backwards compatibility only.
@@ -1043,7 +1041,7 @@ public:
 
     /**
      * Get the rounding mode. This will always return NumberFormat::ERoundingMode::kRoundUnnecessary
-     * if the subclass does not support rounding.
+     * if the subclass does not support rounding. 
      * @return A rounding mode
      * @stable ICU 60
      */
